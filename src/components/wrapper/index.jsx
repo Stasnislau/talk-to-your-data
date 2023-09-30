@@ -20,13 +20,13 @@ const WrapperComponent = observer(({ children }) => {
           zIndex: 5000,
         }}
       >
-        {store.state.isBeingSubmitted && (
+        {store.state.isLoading && (
           <Box
             sx={{
               position: "fixed",
               zIndex: 5000,
-              top: "50%",
-              left: "50%",
+              top: "90%",
+              left: "90%",
               transform: "translate(-50%, -50%)",
             }}
           >
