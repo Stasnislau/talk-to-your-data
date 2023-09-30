@@ -4,7 +4,11 @@ export default class Store {
   constructor() {
     this.state = {
       isLoading: false,
-      currentRoomId: "",
+      currentContextUrl: "",
+      chosenDataUrl: "",
+      currentMode: "none", // "none", "source", "testDatabase"
+      shouldUpdateSourceList: false,
+      shouldUpdateContextList: false,
     };
     makeAutoObservable(this);
   }
@@ -13,7 +17,22 @@ export default class Store {
     this.state.isLoading = value;
   }
 
-  setCurrentRoomId(value) {
-    this.state.currentRoomId = value;
+  setCurrentContextUrl(value) {
+    this.state.currentContextUrl = value;
+  }
+
+  setChosenDataUrl(value) {
+    this.state.chosenDataUrl = value;
+  }
+
+  setShouldUpdateSourceList(value) {
+    this.state.shouldUpdateSourceList = value;
+  }
+  setShouldUpdateContextList(value) {
+    this.state.shouldUpdateContextList = value;
+  }
+
+  setCurrentMode(value) {
+    this.state.currentMode = value;
   }
 }

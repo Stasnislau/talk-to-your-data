@@ -10,14 +10,17 @@ import {
 import useMicFrequency from "../../hooks";
 import { Mic, Send } from "@mui/icons-material";
 import LanguageDropdown from "../languageDropdown";
+import { observer } from "mobx-react-lite";
 
-const InputBox = () => {
+const InputBox = observer(({ onSend, text, setText }) => {
   const store = useContext(Context);
-  const [text, setText] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const frequency = useMicFrequency({ isEnabled: Boolean(isRecording) });
   const handleSend = () => {
-    // to be implemented
+    if (text === "") {
+      return;
+    }
+    onSend(text);
   };
   // eslint-disable-next-line react/prop-types
   const CustomBox = ({ volume, ...rest }) => {
@@ -37,8 +40,8 @@ const InputBox = () => {
     }
   `;
   const availableLanguages = [
-    { value: "en-US", label: "English (US)" },
     { value: "pl-PL", label: "Polski (PL)" },
+    { value: "en-US", label: "English (US)" },
   ];
   const [language, setLanguage] = useState(availableLanguages[0].value);
   useEffect(() => {
@@ -54,7 +57,7 @@ const InputBox = () => {
         recognition.onresult = (event) => {
           if (isRecording) {
             const speechResult = event.results[0][0].transcript;
-            setText(text? text + " " + speechResult : speechResult);
+            setText(text ? text + " " + speechResult : speechResult);
           } else {
             recognition.stop();
             setIsRecording(false);
@@ -102,9 +105,7 @@ const InputBox = () => {
         multiline
         value={text}
         sx={{
-          "& .MuiInputBase-root": {
-            backgroundColor: "primary.main",
-          },
+          "& .MuiInputBase-root": {},
         }}
         onChange={(event) => setText(event.target.value)}
         onKeyDown={handleKeyDown}
@@ -142,6 +143,6 @@ const InputBox = () => {
       />
     </Box>
   );
-};
+});
 
 export default InputBox;
