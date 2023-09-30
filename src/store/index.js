@@ -5,6 +5,8 @@ export default class Store {
     this.state = {
       isLoading: false,
       currentRoomId: "",
+      chosenDataUrl: "",
+      shouldUpdateList: false,
     };
     makeAutoObservable(this);
   }
@@ -15,5 +17,13 @@ export default class Store {
 
   setCurrentRoomId(value) {
     this.state.currentRoomId = value;
+  }
+
+  setChosenDataUrl(value) {
+    this.state.chosenDataUrl = value;
+  }
+
+  setShouldUpdateList(value) {
+    this.state.shouldUpdateList = value;
   }
 }

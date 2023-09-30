@@ -5,6 +5,7 @@ import { observer } from "mobx-react-lite";
 import { useContext, useState } from "react";
 import { Context } from "../App";
 import InputBox from "../components/inputBox";
+import DataSourceList from "../components/dataSourceList";
 
 const Container = styled(Box)`
   display: flex;
@@ -48,7 +49,19 @@ const MainPage = observer(() => {
         </Box>
       </SideBar>
       <Box sx={{ width: "95%", height: "100%" }}>
-        <InputBox />
+        <DataSourceList />
+        <Box
+          sx={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <InputBox />
+        </Box>
       </Box>
     </Container>
   );
