@@ -27,10 +27,16 @@ const MainPage = observer(() => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            justifyContent: isHistoryOpen ? "flex-end" : "flex-start",
+            justifyContent: "flex-start",
+            width: "100%",
           }}
         >
-          <IconButton onClick={() => setIsHistoryOpen(!isHistoryOpen)}>
+          <IconButton
+            onClick={() => setIsHistoryOpen(!isHistoryOpen)}
+            sx={{
+              width: "50px",
+            }}
+          >
             <Menu />
           </IconButton>
         </Box>
