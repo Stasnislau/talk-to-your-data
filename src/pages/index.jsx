@@ -1,28 +1,33 @@
+import styled from "@emotion/styled";
+import { Menu } from "@mui/icons-material";
 import { Box, IconButton } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import { useContext, useState } from "react";
 import { Context } from "../App";
-import { Menu } from "@mui/icons-material";
+
+const Container = styled(Box)`
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100vw;
+`;
+
+const SideBar = styled(Box)`
+  width: 5%;
+  &.is-open {
+    width: 20%;
+  }
+  height: 100%;
+  background-color: var(--color-primary);
+  transition: width 0.5s ease-in-out;
+`;
 
 const MainPage = observer(() => {
   const store = useContext(Context);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "row",
-        height: "100vh",
-        width: "100vw",
-      }}
-    >
-      <Box
-        sx={{
-          width: isHistoryOpen ? "20%" : "5%",
-          height: "100%",
-          backgroundColor: "grey",
-        }}
-      >
+    <Container>
+      <SideBar className={isHistoryOpen ? "is-open" : ""}>
         <Box
           sx={{
             display: "flex",
@@ -40,8 +45,8 @@ const MainPage = observer(() => {
             <Menu />
           </IconButton>
         </Box>
-      </Box>
-    </Box>
+      </SideBar>
+    </Container>
   );
 });
 
