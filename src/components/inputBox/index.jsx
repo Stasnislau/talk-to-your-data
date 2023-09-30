@@ -9,12 +9,13 @@ import {
 } from "@mui/material";
 import useMicFrequency from "../../hooks";
 import { Mic, Send } from "@mui/icons-material";
+import LanguageDropdown from "../languageDropdown";
 
 const InputBox = () => {
   const store = useContext(Context);
   const [text, setText] = useState("");
   const [isRecording, setIsRecording] = useState(false);
-  const frequency = useMicFrequency(isRecording);
+  const frequency = useMicFrequency({ isEnabled: Boolean(isRecording) });
   const handleSend = () => {
     // to be implemented
   };
@@ -28,22 +29,25 @@ const InputBox = () => {
       border: 2px solid red;
       border-radius: 50%;
       opacity: 0.5;
-      overflow: hidden;
       background-color: #dc143c;
-      width: calc(40px + ${({ volume }) => Math.sqrt(volume) * 1}px);
-      height: calc(40px + ${({ volume }) => Math.sqrt(volume) * 1}px);
+      width: calc(40px + ${({ volume }) => Math.sqrt(volume)}px);
+      height: calc(40px + ${({ volume }) => Math.sqrt(volume)}px);
       top: calc(50%-${({ volume }) => volume}px);
       left: calc(50%-${({ volume }) => volume}px);
     }
   `;
-
+  const availableLanguages = [
+    { value: "en-US", label: "English (US)" },
+    { value: "pl-PL", label: "Polski (PL)" },
+  ];
+  const [language, setLanguage] = useState(availableLanguages[0].value);
   useEffect(() => {
     const recordText = () => {
       if ("webkitSpeechRecognition" in window) {
         const SpeechRecognition =
           window.SpeechRecognition || window.webkitSpeechRecognition;
         const recognition = new SpeechRecognition();
-        recognition.lang = "en-US";
+        recognition.lang = language;
         recognition.interimResults = false;
         recognition.maxAlternatives = 1;
         recognition.start();
@@ -53,10 +57,12 @@ const InputBox = () => {
             setText(speechResult);
           } else {
             recognition.stop();
+            setIsRecording(false);
           }
         };
         recognition.onspeechend = () => {
           recognition.stop();
+          setIsRecording(false);
         };
         recognition.onerror = (event) => {
           console.log(event.error);
@@ -65,7 +71,9 @@ const InputBox = () => {
         return;
       }
     };
-    if (isRecording) recordText();
+    if (isRecording) {
+      recordText();
+    }
   }, [isRecording]);
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -78,11 +86,16 @@ const InputBox = () => {
       sx={{
         position: "relative",
         display: "flex",
-        flexDirection: "row",
+        flexDirection: "column",
         width: "100%",
         boxSizing: "border-box",
       }}
     >
+      <LanguageDropdown
+        languages={availableLanguages}
+        currentLanguage={language}
+        changeLanguage={setLanguage}
+      />
       <TextField
         fullWidth
         maxRows={8}
@@ -107,8 +120,9 @@ const InputBox = () => {
             <InputAdornment position="start">
               <IconButton
                 onClick={() => {
-                 setIsRecording(!isRecording);
+                  setIsRecording(!isRecording);
                 }}
+                backgroundColor="red"
               >
                 <StyledBox
                   volume={frequency}
