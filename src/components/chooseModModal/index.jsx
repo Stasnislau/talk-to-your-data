@@ -21,31 +21,29 @@ const chooseModModal = observer(({ open, onClose }) => {
 
   const store = useContext(Context);
   const mods = [
-    { value: "testDatabase", label: "test database" },
+    { value: "testDatabase", label: "Test JPK database" },
     { value: "source", label: "Source" },
-    { value: "none", label: "None" },
   ];
-  const [chosenMod, setChosenMod] = useState("none");
+  const [chosenMod, setChosenMod] = useState();
   const [error, setError] = useState("");
   const onSubmit = (data) => {
     const { chosenMod } = data;
-    if (chosenMod !== "source" || chosenMod !== "testDatabase") {
+    if (chosenMod !== "source" && chosenMod !== "testDatabase") {
       setError("Please choose mode");
       return;
     }
-    store.setChosenMod(chosenMod);
+    store.setCurrentMode(chosenMod);
     onClose();
   };
 
   const handleSubmit = (event) => {
     setError("");
     event.preventDefault();
-    if (chosenMod !== "source" || chosenMod !== "testDatabase") {
+    if (chosenMod !== "source" && chosenMod !== "testDatabase") {
       setError("Please choose mode");
       return;
     }
     onSubmit({ chosenMod });
-    onClose();
   };
 
   return (
@@ -57,7 +55,7 @@ const chooseModModal = observer(({ open, onClose }) => {
           minHeight: "200px",
         }}
       >
-        <form onSubmit={handleSubmit}>
+        <form>
           <Box
             sx={{
               display: "flex",
@@ -71,7 +69,9 @@ const chooseModModal = observer(({ open, onClose }) => {
                 marginTop: "1rem",
               }}
               value={chosenMod}
-              onChange={(e) => setChosenMod(e.target.value)}
+              onChange={(e) => {
+                setChosenMod(e.target.value);
+              }}
             >
               {mods.map((mod) => (
                 <MenuItem key={mod.value} value={mod.value}>
@@ -87,6 +87,7 @@ const chooseModModal = observer(({ open, onClose }) => {
               sx={{
                 marginTop: "3rem",
               }}
+              onClick={handleSubmit}
             >
               Submit
             </Button>

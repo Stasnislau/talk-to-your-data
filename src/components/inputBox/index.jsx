@@ -12,29 +12,15 @@ import { Mic, Send } from "@mui/icons-material";
 import LanguageDropdown from "../languageDropdown";
 import { observer } from "mobx-react-lite";
 
-const InputBox = observer(() => {
+const InputBox = observer(({ onSend, text, setText }) => {
   const store = useContext(Context);
-  const fetchContext = () => {
-    const data = localStorage.getItem("contexts");
-    const parsedData = JSON.parse(data);
-    if (!parsedData) {
-      return {};
-    }
-    const currentContext =
-      parsedData.find((context) => context.url === store.currentContextUrl) ||
-      {};
-    return currentContext;
-  };
-  const [currentContext, setCurrentContext] = useState(fetchContext());
-  useEffect(() => {
-    setCurrentContext(fetchContext());
-  }, [store.currentContextUrl]);
-  const [text, setText] = useState(currentContext.text || "");
   const [isRecording, setIsRecording] = useState(false);
-
   const frequency = useMicFrequency({ isEnabled: Boolean(isRecording) });
   const handleSend = () => {
-    // to be implemented
+    if (text === "") {
+      return;
+    }
+    onSend(text);
   };
   // eslint-disable-next-line react/prop-types
   const CustomBox = ({ volume, ...rest }) => {
@@ -54,8 +40,8 @@ const InputBox = observer(() => {
     }
   `;
   const availableLanguages = [
-    { value: "en-US", label: "English (US)" },
     { value: "pl-PL", label: "Polski (PL)" },
+    { value: "en-US", label: "English (US)" },
   ];
   const [language, setLanguage] = useState(availableLanguages[0].value);
   useEffect(() => {
@@ -119,9 +105,7 @@ const InputBox = observer(() => {
         multiline
         value={text}
         sx={{
-          "& .MuiInputBase-root": {
-            backgroundColor: "primary.main",
-          },
+          "& .MuiInputBase-root": {},
         }}
         onChange={(event) => setText(event.target.value)}
         onKeyDown={handleKeyDown}
