@@ -4,6 +4,7 @@ import { Box, IconButton } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import { useContext, useState } from "react";
 import { Context } from "../App";
+import InputBox from "../components/inputBox";
 
 const Container = styled(Box)`
   display: flex;
@@ -46,6 +47,9 @@ const MainPage = observer(() => {
           </IconButton>
         </Box>
       </SideBar>
+      <Box sx={{ width: "95%", height: "100%" }}>
+        <InputBox />
+      </Box>
     </Container>
   );
 });

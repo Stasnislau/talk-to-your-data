@@ -14,7 +14,7 @@ const InputBox = () => {
   const store = useContext(Context);
   const [text, setText] = useState("");
   const [isRecording, setIsRecording] = useState(false);
-  const frequency = useMicFrequency();
+  const frequency = useMicFrequency(isRecording);
   const handleSend = () => {
     // to be implemented
   };
@@ -66,9 +66,6 @@ const InputBox = () => {
       }
     };
     if (isRecording) recordText();
-    else {
-      recordText.stop();
-    }
   }, [isRecording]);
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -110,7 +107,7 @@ const InputBox = () => {
             <InputAdornment position="start">
               <IconButton
                 onClick={() => {
-                  if (isRecording === null) setIsRecording(true);
+                 setIsRecording(!isRecording);
                 }}
               >
                 <StyledBox
