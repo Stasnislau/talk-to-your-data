@@ -18,7 +18,7 @@ const MainPage = observer(() => {
     >
       <Box
         sx={{
-          width: isHistoryOpen ? "5%" : "20%",
+          width: isHistoryOpen ? "20%" : "5%",
           height: "100%",
           backgroundColor: "grey",
         }}
