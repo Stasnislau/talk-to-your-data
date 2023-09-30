@@ -54,7 +54,7 @@ const InputBox = () => {
         recognition.onresult = (event) => {
           if (isRecording) {
             const speechResult = event.results[0][0].transcript;
-            setText(speechResult);
+            setText(text? text + " " + speechResult : speechResult);
           } else {
             recognition.stop();
             setIsRecording(false);
