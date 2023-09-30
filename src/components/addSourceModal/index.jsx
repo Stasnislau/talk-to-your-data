@@ -9,13 +9,13 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 import { Context } from "../../App";
+import { observer } from "mobx-react-lite";
 
-AddSourceModal.propTypes = {
-  open: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-};
-
-function AddSourceModal({ open, onClose }) {
+const AddSourceModal = observer(({ open, onClose }) => {
+  AddSourceModal.propTypes = {
+    open: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+  };
   const store = useContext(Context);
   const [url, setUrl] = useState("");
   const [name, setName] = useState("");
@@ -37,7 +37,7 @@ function AddSourceModal({ open, onClose }) {
       "dataSources",
       JSON.stringify([...dataSources, newSource])
     );
-    store.setShouldUpdateList(true);
+    store.setShouldUpdateSourceList(true);
     onClose();
   };
 
@@ -87,6 +87,6 @@ function AddSourceModal({ open, onClose }) {
       </DialogContent>
     </Dialog>
   );
-}
+});
 
 export default AddSourceModal;

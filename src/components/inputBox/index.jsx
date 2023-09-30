@@ -10,11 +10,28 @@ import {
 import useMicFrequency from "../../hooks";
 import { Mic, Send } from "@mui/icons-material";
 import LanguageDropdown from "../languageDropdown";
+import { observer } from "mobx-react-lite";
 
-const InputBox = () => {
+const InputBox = observer(() => {
   const store = useContext(Context);
-  const [text, setText] = useState("");
+  const fetchContext = () => {
+    const data = localStorage.getItem("contexts");
+    const parsedData = JSON.parse(data);
+    if (!parsedData) {
+      return {};
+    }
+    const currentContext =
+      parsedData.find((context) => context.url === store.currentContextUrl) ||
+      {};
+    return currentContext;
+  };
+  const [currentContext, setCurrentContext] = useState(fetchContext());
+  useEffect(() => {
+    setCurrentContext(fetchContext());
+  }, [store.currentContextUrl]);
+  const [text, setText] = useState(currentContext.text || "");
   const [isRecording, setIsRecording] = useState(false);
+
   const frequency = useMicFrequency({ isEnabled: Boolean(isRecording) });
   const handleSend = () => {
     // to be implemented
@@ -54,7 +71,7 @@ const InputBox = () => {
         recognition.onresult = (event) => {
           if (isRecording) {
             const speechResult = event.results[0][0].transcript;
-            setText(text? text + " " + speechResult : speechResult);
+            setText(text ? text + " " + speechResult : speechResult);
           } else {
             recognition.stop();
             setIsRecording(false);
@@ -142,6 +159,6 @@ const InputBox = () => {
       />
     </Box>
   );
-};
+});
 
 export default InputBox;

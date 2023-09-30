@@ -15,8 +15,8 @@ const DataSourceList = observer(() => {
     const parsedData = JSON.parse(data);
     setList(parsedData);
     store.setChosenDataUrl(parsedData[0].url) || "";
-    store.setShouldUpdateList(false);
-  }, [store.shouldUpdateList]);
+    store.setShouldUpdateSourceList(false);
+  }, [store.shouldUpdateSourceList]);
   return (
     <Box
       sx={{
