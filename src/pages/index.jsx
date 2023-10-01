@@ -11,6 +11,7 @@ import ContextList from "../components/ContextList";
 import GettingStarted from "../components/gettingStarted";
 import ChooseModModal from "../components/chooseModModal";
 import SQLQueryBox from "../components/sqlQueryBox";
+import TableComponent from "../components/tableComponent";
 
 const Container = styled(Box)`
   display: flex;
@@ -69,10 +70,10 @@ const MainPage = observer(() => {
       ? currentContext.sqlQuery
       : ""
   );
-  const [output, setOutput] = useState(
+  const [queryResult, setQueryResult] = useState(
     currentContext && currentContext.keys && currentContext.keys.length > 0
-      ? currentContext.output
-      : []
+      ? currentContext.queryResult
+      : {}
   );
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isChooseModalOpen, setIsChooseModalOpen] = useState(false);
@@ -155,6 +156,7 @@ const MainPage = observer(() => {
   const sendQueryTestDatabase = async (sqlQuery) => {
     try {
       store.setIsLoading(true);
+      console.log("JA KURWA PIERDOLE");
       const res = await fetch("http://192.168.203.105:8000/execute", {
         method: "POST",
         timeout: 180000,
@@ -167,7 +169,8 @@ const MainPage = observer(() => {
         }),
       });
       const data = await res.json();
-      setOutput(data.output);
+      console.log(data.queryResult);
+      setQueryResult(data.queryResult);
     } catch (error) {
       console.log(error);
     } finally {
@@ -175,7 +178,7 @@ const MainPage = observer(() => {
     }
   };
 
-  const sendQueryTestAnyDatabase = async (sqlQuery) => {
+  const sendQueryAnyDatabase = async (sqlQuery) => {
     try {
       store.setIsLoading(true);
       const res = await fetch("http://192.168.203.105:8000/execute", {
@@ -190,7 +193,7 @@ const MainPage = observer(() => {
         }),
       });
       const data = await res.json();
-      setOutput(data.output);
+      setQueryResult(data.queryResult);
     } catch (error) {
       console.log(error);
     } finally {
@@ -280,36 +283,49 @@ const MainPage = observer(() => {
             position: "relative",
           }}
         >
-          <Box sx={{ width: "50%", height: "40%" }}>
-            <InputBox
-              text={text}
-              setText={setText}
-              onSend={
-                store.state.currentMode === "source"
-                  ? sendSpeechAnyBase
-                  : sendSpeechTestBase
-              }
-            />
-          </Box>
+          {store.state.currentMode !== "none" && (
+            <Box sx={{ width: "50%", height: "30%" }}>
+              <InputBox
+                text={text}
+                setText={setText}
+                onSend={
+                  store.state.currentMode === "source"
+                    ? sendSpeechAnyBase
+                    : sendSpeechTestBase
+                }
+              />
+            </Box>
+          )}
           {sqlQuery && (
             <Box
               sx={{
                 width: "50%",
-                height: "40%",
+                height: "30%",
               }}
             >
               <SQLQueryBox
                 query={sqlQuery}
-                setSqlQuery={setSqlQuery}
-                isEditable={Boolean(output)}
+                setQuery={setSqlQuery}
+                isEditable={Boolean(queryResult)}
                 onSend={
                   store.state.currentMode === "source"
-                    ? sendQueryTestAnyDatabase
+                    ? sendQueryAnyDatabase
                     : sendQueryTestDatabase
                 }
               />
             </Box>
           )}
+        </Box>
+        <Box
+          sx={{
+            width: "50%",
+            height: "40%",
+          }}
+        >
+          {/* {queryResult && queryResult.keys && queryResult.keys.length > 0 && (
+            <TableComponent queryResult={queryResult} />
+          )} */}
+          <TableComponent queryResult={queryResult} />
         </Box>
       </Box>
       {store.state.currentContextUrl === "temp" && isChooseModalOpen && (

@@ -12,7 +12,6 @@ const SQLQueryBox = observer(({ query, setQuery, isEditable, onSend }) => {
     isEditable: PropTypes.bool.isRequired,
     onSend: PropTypes.func.isRequired,
   };
-  console.log(query);
   const store = useContext(Context);
   const validateQuery = () => {
     return query.trim() !== "";
@@ -27,7 +26,6 @@ const SQLQueryBox = observer(({ query, setQuery, isEditable, onSend }) => {
       handleSend();
     }
   };
-
   return isEditable ? (
     <Box>
       <TextField
@@ -43,7 +41,11 @@ const SQLQueryBox = observer(({ query, setQuery, isEditable, onSend }) => {
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <IconButton onClick={handleSend}>
+              <IconButton
+                onClick={() => {
+                  handleSend();
+                }}
+              >
                 <Send />
               </IconButton>
             </InputAdornment>
