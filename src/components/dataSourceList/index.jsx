@@ -10,7 +10,6 @@ import {
   InputLabel,
   OutlinedInput,
 } from "@mui/material";
-import { Context } from "../../App";
 import AddSourceModal from "../addSourceModal";
 import { Add } from "@mui/icons-material";
 import useStateLS from "../../hooks/useStateLS";
@@ -20,23 +19,24 @@ const DataSourceList = observer(({ selected, onChange }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <Box sx={{ width: "50%", height: "100%", position: "relative" }}>
-      <Box
-        sx={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          position: "relative",
-        }}
-      >
-        <FormControl sx={{ m: 1, width: 500 }}>
+    <Box sx={{ height: "100%", position: "relative" }}>
+      <Box fullWidth>
+        <FormControl
+          sx={{
+            "&.MuiFormControl-root": {
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              margin: "1rem 0",
+              fullWidth: true,
+            },
+          }}
+        >
           <InputLabel id="demo-multiple-name-label">URL</InputLabel>
           <Select
             labelId="demo-multiple-name-label"
             id="demo-multiple-name"
+            fullWidth
             value={selected}
             onChange={(event) => {
               onChange(event.target.value);
@@ -56,14 +56,15 @@ const DataSourceList = observer(({ selected, onChange }) => {
                 </MenuItem>
               ))}
           </Select>
+
+          <IconButton
+            onClick={() => {
+              setIsModalOpen(true);
+            }}
+          >
+            <Add />
+          </IconButton>
         </FormControl>
-        <IconButton
-          onClick={() => {
-            setIsModalOpen(true);
-          }}
-        >
-          <Add />
-        </IconButton>
       </Box>
 
       {isModalOpen && (
