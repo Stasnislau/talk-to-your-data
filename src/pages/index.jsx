@@ -13,6 +13,7 @@ import CreateContextModal from "../components/createContextModal";
 import SQLQueryBox from "../components/sqlQueryBox";
 import useStateLS from "../hooks/useStateLS";
 import HistoryComponent from "../components/historyComponent";
+import TableComponent from "../components/tableComponent";
 
 const Container = styled(Box)`
   display: flex;
@@ -318,6 +319,17 @@ const MainPage = observer(() => {
             </Box>
           </Box>
           )}
+        <Box
+          sx={{
+            width: "50%",
+            height: "40%",
+          }}
+        >
+          {/* {queryResult && queryResult.keys && queryResult.keys.length > 0 && (
+            <TableComponent queryResult={queryResult} />
+          )} */}
+          <TableComponent queryResult={queryResult} />
+        </Box>
       </Box>
       </Box>
       {store.state.currentContext === "temp" && isChooseModalOpen && (
