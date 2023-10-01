@@ -13,18 +13,12 @@ import {
 import { Context } from "../../App";
 import AddSourceModal from "../addSourceModal";
 import { Add } from "@mui/icons-material";
+import useStateLS from "../../hooks/useStateLS";
 
-const DataSourceList = observer(() => {
-  const store = useContext(Context);
-  const [list, setList] = useState([]);
+const DataSourceList = observer(({ selected, onChange }) => {
+  const [list, setList] = useStateLS("dataSources", []);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  useEffect(() => {
-    const data = localStorage.getItem("dataSources");
-    const parsedData = JSON.parse(data);
-    setList(parsedData);
-    store.setChosenDataUrl(parsedData[0].url) || "";
-    store.setShouldUpdateSourceList(false);
-  }, [store.shouldUpdateSourceList]);
+
   return (
     <Box sx={{ width: "50%", height: "100%", position: "relative" }}>
       <Box
@@ -43,9 +37,9 @@ const DataSourceList = observer(() => {
           <Select
             labelId="demo-multiple-name-label"
             id="demo-multiple-name"
-            value={store.state.chosenDataUrl}
+            value={selected}
             onChange={(event) => {
-              store.setChosenDataUrl(event.target.value);
+              onChange(event.target.value);
             }}
             input={<OutlinedInput label="URL" />}
           >
@@ -76,6 +70,8 @@ const DataSourceList = observer(() => {
         <AddSourceModal
           open={isModalOpen}
           onClose={() => setIsModalOpen(false)}
+          list={list}
+          setList={setList}
         />
       )}
     </Box>

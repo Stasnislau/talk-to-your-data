@@ -12,9 +12,10 @@ import {
 import PropTypes from "prop-types";
 import { Context } from "../../App";
 import { observer } from "mobx-react-lite";
+import DataSourceList from "../dataSourceList";
 
-const chooseModModal = observer(({ open, onClose }) => {
-  chooseModModal.propTypes = {
+const createContextModal = observer(({ open, onClose, contexts, setContexts }) => {
+  createContextModal.propTypes = {
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
   };
@@ -24,15 +25,19 @@ const chooseModModal = observer(({ open, onClose }) => {
     { value: "testDatabase", label: "Test JPK database" },
     { value: "source", label: "Source" },
   ];
+
+  const [talkName, setTalkName] = useState("");
   const [chosenMod, setChosenMod] = useState();
+  const [chosenSource, setChosenSource] = useState();
+
   const [error, setError] = useState("");
   const onSubmit = (data) => {
-    const { chosenMod } = data;
-    if (chosenMod !== "source" && chosenMod !== "testDatabase") {
+    const { mode, talkName } = data;
+    if (mode !== "source" && mode !== "testDatabase") {
       setError("Please choose mode");
       return;
     }
-    store.setCurrentMode(chosenMod);
+    store.setCurrentContextUrl(talkName);
     onClose();
   };
 
@@ -43,12 +48,14 @@ const chooseModModal = observer(({ open, onClose }) => {
       setError("Please choose mode");
       return;
     }
-    onSubmit({ chosenMod });
+    const newContext = { mode: chosenMod, source: chosenSource, talkName };
+    onSubmit(newContext)
+    setContexts([...contexts, newContext]);
   };
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Choose mode</DialogTitle>
+      <DialogTitle>Create context</DialogTitle>
       <DialogContent
         sx={{
           minWidth: "200px",
@@ -62,6 +69,16 @@ const chooseModModal = observer(({ open, onClose }) => {
               flexDirection: "column",
             }}
           >
+            <TextField
+              label="Talk name"
+              sx={{
+                marginTop: "1rem",
+              }}
+              value={talkName}
+              onChange={(e) => {
+                setTalkName(e.target.value)
+              }}
+            />
             <TextField
               label="Choose mode"
               select
@@ -79,7 +96,11 @@ const chooseModModal = observer(({ open, onClose }) => {
                 </MenuItem>
               ))}
             </TextField>
-
+            {
+              chosenMod === "source" && (
+                <DataSourceList selected={chosenSource} onChange={setChosenSource} />
+              )
+            }
             <Button
               type="submit"
               variant="contained"
@@ -99,4 +120,4 @@ const chooseModModal = observer(({ open, onClose }) => {
   );
 });
 
-export default chooseModModal;
+export default createContextModal;

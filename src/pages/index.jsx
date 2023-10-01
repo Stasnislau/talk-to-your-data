@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Menu } from "@mui/icons-material";
+import { Menu, Add } from "@mui/icons-material";
 import { Box, IconButton, Button } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import { useContext, useEffect, useState } from "react";
@@ -9,9 +9,10 @@ import InputBox from "../components/inputBox";
 import DataSourceList from "../components/dataSourceList";
 import ContextList from "../components/ContextList";
 import GettingStarted from "../components/gettingStarted";
-import ChooseModModal from "../components/chooseModModal";
+import CreateContextModal from "../components/createContextModal";
 import SQLQueryBox from "../components/sqlQueryBox";
 import TableComponent from "../components/tableComponent";
+import useStateLS from "../hooks/useStateLS";
 
 const Container = styled(Box)`
   display: flex;
@@ -32,6 +33,7 @@ const SideBar = styled(Box)`
 
 const MainPage = observer(() => {
   const store = useContext(Context);
+  const [contexts, setContexts] = useStateLS("contexts", []);
   const fetchContext = () => {
     if (store.currentContextUrl === "") {
       store.setCurrentContextUrl("none");
@@ -43,13 +45,13 @@ const MainPage = observer(() => {
     if (store.currentContextUrl === "temp") {
       return;
     }
-    const data = localStorage.getItem("contexts");
-    const parsedData = JSON.parse(data);
-    if (!parsedData) {
+
+    if (!contexts) {
       return {};
     }
+  
     const currentContext =
-      parsedData.find((context) => context.url === store.currentContextUrl) ||
+    contexts.find((context) => context.url === store.currentContextUrl) ||
       {};
 
     return currentContext;
@@ -75,7 +77,7 @@ const MainPage = observer(() => {
       ? currentContext.queryResult
       : {}
   );
-  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(true);
   const [isChooseModalOpen, setIsChooseModalOpen] = useState(false);
   const wsRequest = (serverUrl, requestSocket, requestData, responseSocket) => {
     const socket = io(serverUrl);
@@ -107,7 +109,6 @@ const MainPage = observer(() => {
       });
       const data = await res.json();
       const ddl = data.ddl;
-      console.log(ddl);
       const { sqlQuery } = await wsRequest(
         "http://192.168.203.105:5000",
         "process",
@@ -223,25 +224,20 @@ const MainPage = observer(() => {
               padding: "0 5px",
             }}
           >
-            <IconButton
-              onClick={() => setIsHistoryOpen(!isHistoryOpen)}
-              sx={{
-                width: "50px",
-              }}
-            >
-              <Menu />
-            </IconButton>
             <Button
+              color="secondary"
+              variant="outlined"
               sx={{
-                display: isHistoryOpen ? "flex" : "none",
-                backgroundColor: "red",
+                display: "flex",
+                margin: "0.5rem",
+                flex: 1,
               }}
               onClick={() => {
                 store.setCurrentContextUrl("temp");
                 setIsChooseModalOpen(true);
               }}
             >
-              Add Context
+              <Add />
             </Button>
           </Box>
           <Box
@@ -253,7 +249,7 @@ const MainPage = observer(() => {
               display: isHistoryOpen ? "flex" : "none",
             }}
           >
-            <ContextList />
+            <ContextList contexts={contexts} />
           </Box>
         </Box>
       </SideBar>
@@ -267,10 +263,6 @@ const MainPage = observer(() => {
           flexDirection: "column",
         }}
       >
-        {store.state.currentContextUrl === "temp" &&
-        store.state.currentMode === "source" ? (
-          <DataSourceList />
-        ) : null}
         {store.state.currentContextUrl === "none" ? <GettingStarted /> : null}
         <Box
           sx={{
@@ -329,7 +321,9 @@ const MainPage = observer(() => {
         </Box>
       </Box>
       {store.state.currentContextUrl === "temp" && isChooseModalOpen && (
-        <ChooseModModal
+        <CreateContextModal
+          contexts={contexts}
+          setContexts={setContexts}
           open={isChooseModalOpen}
           onClose={() => {
             setIsChooseModalOpen(false);

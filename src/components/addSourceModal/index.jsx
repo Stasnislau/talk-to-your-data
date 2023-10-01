@@ -1,4 +1,3 @@
-import { useState, useContext } from "react";
 import {
   Button,
   Dialog,
@@ -7,11 +6,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import PropTypes from "prop-types";
-import { Context } from "../../App";
 import { observer } from "mobx-react-lite";
+import PropTypes from "prop-types";
+import { useContext, useState } from "react";
+import { Context } from "../../App";
 
-const AddSourceModal = observer(({ open, onClose }) => {
+const AddSourceModal = observer(({ open, onClose, list, setList }) => {
   AddSourceModal.propTypes = {
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
@@ -20,23 +20,20 @@ const AddSourceModal = observer(({ open, onClose }) => {
   const [url, setUrl] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState("");
+
   const onSubmit = (data) => {
     const { url, name } = data;
     if (url.trim() === "" || name.trim() === "") {
       return;
     }
     const newSource = { name, url };
-    const dataSources = JSON.parse(localStorage.getItem("dataSources")) || [];
-    dataSources.forEach((source) => {
+    list.forEach((source) => {
       if (source.url === url) {
         setError("Source with this url already exists");
         return;
       }
     });
-    localStorage.setItem(
-      "dataSources",
-      JSON.stringify([...dataSources, newSource])
-    );
+    setList([...list, newSource]);
     store.setShouldUpdateSourceList(true);
     onClose();
   };
