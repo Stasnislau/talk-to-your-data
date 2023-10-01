@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { Menu, Add } from "@mui/icons-material";
-import { Box, IconButton, Button } from "@mui/material";
+import { Box, IconButton, Button, Divider } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import { useContext, useEffect, useState } from "react";
 import io from "socket.io-client";
@@ -12,6 +12,7 @@ import GettingStarted from "../components/gettingStarted";
 import CreateContextModal from "../components/createContextModal";
 import SQLQueryBox from "../components/sqlQueryBox";
 import useStateLS from "../hooks/useStateLS";
+import HistoryComponent from "../components/historyComponent";
 
 const Container = styled(Box)`
   display: flex;
@@ -271,8 +272,20 @@ const MainPage = observer(() => {
             position: "relative",
           }}
         >
-          {store.state.currentContext !== "none" && currentContext && (
-            <Box sx={{ width: "50%", height: "30%" }}>
+          <Box sx={{ width: "100%", height: "60%" }}>
+            <HistoryComponent context={currentContext} />
+            <Divider sx={{ width: "100%", height: "1px", color: "black" }} />
+          </Box>
+          <Box
+            width="80%"
+            height="40%"
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "1rem",
+            }}
+          >
+            <Box sx={{ width: "100%" }}>
               <InputBox
                 text={text}
                 setText={setText}
@@ -283,7 +296,7 @@ const MainPage = observer(() => {
                 }
               />
             </Box>
-          )}
+          </Box>
           {currentContext && sqlQuery && (
             <Box
               sx={{
@@ -291,6 +304,7 @@ const MainPage = observer(() => {
                 height: "40%",
               }}
             >
+            <Box sx={{ width: "100%" }}>
               <SQLQueryBox
                 query={sqlQuery}
                 setSqlQuery={setSqlQuery}
@@ -302,8 +316,9 @@ const MainPage = observer(() => {
                 }
               />
             </Box>
+          </Box>
           )}
-        </Box>
+      </Box>
       </Box>
       {store.state.currentContext === "temp" && isChooseModalOpen && (
         <CreateContextModal
