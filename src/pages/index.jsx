@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { Menu, Add } from "@mui/icons-material";
 import { Box, IconButton, Button, Divider } from "@mui/material";
+import { Box, IconButton, Button, Divider } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import { useContext, useEffect, useState } from "react";
 import io from "socket.io-client";
@@ -12,6 +13,7 @@ import GettingStarted from "../components/gettingStarted";
 import CreateContextModal from "../components/createContextModal";
 import SQLQueryBox from "../components/sqlQueryBox";
 import useStateLS from "../hooks/useStateLS";
+import HistoryComponent from "../components/historyComponent";
 import HistoryComponent from "../components/historyComponent";
 
 const Container = styled(Box)`
@@ -49,6 +51,7 @@ const MainPage = observer(() => {
     if (!contexts) {
       return {};
     }
+
 
     const currentContext =
       contexts.find((context) => context.url === store.currentContextUrl) || {};
@@ -286,6 +289,20 @@ const MainPage = observer(() => {
             }}
           >
             <Box sx={{ width: "100%" }}>
+          <Box sx={{ width: "100%", height: "60%" }}>
+            <HistoryComponent context={currentContext} />
+            <Divider sx={{ width: "100%", height: "1px", color: "black" }} />
+          </Box>
+          <Box
+            width="80%"
+            height="40%"
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "1rem",
+            }}
+          >
+            <Box sx={{ width: "100%" }}>
               <InputBox
                 text={text}
                 setText={setText}
@@ -296,6 +313,7 @@ const MainPage = observer(() => {
                 }
               />
             </Box>
+            <Box sx={{ width: "100%" }}>
             <Box sx={{ width: "100%" }}>
               <SQLQueryBox
                 query={sqlQuery}
@@ -308,6 +326,18 @@ const MainPage = observer(() => {
                 }
               />
             </Box>
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            width: "50%",
+            height: "40%",
+          }}
+        >
+          {/* {queryResult && queryResult.keys && queryResult.keys.length > 0 && (
+            <TableComponent queryResult={queryResult} />
+          )} */}
+          <TableComponent queryResult={queryResult} />
           </Box>
         </Box>
       </Box>
