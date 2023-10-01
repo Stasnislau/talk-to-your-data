@@ -54,7 +54,7 @@ const ContextList = observer(() => {
               alignItems: "center",
               cursor: "pointer",
               backgroundColor:
-                store.state.setCurrentContextUrl === context.url
+                store.state.currentContextUrl === context.url
                   ? "rgba(0, 0, 0, 0.1)"
                   : "#ffffff",
               "&:hover": {
