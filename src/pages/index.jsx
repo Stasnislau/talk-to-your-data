@@ -11,7 +11,6 @@ import ContextList from "../components/ContextList";
 import GettingStarted from "../components/gettingStarted";
 import CreateContextModal from "../components/createContextModal";
 import SQLQueryBox from "../components/sqlQueryBox";
-import TableComponent from "../components/tableComponent";
 import useStateLS from "../hooks/useStateLS";
 
 const Container = styled(Box)`
@@ -35,14 +34,14 @@ const MainPage = observer(() => {
   const store = useContext(Context);
   const [contexts, setContexts] = useStateLS("contexts", []);
   const fetchContext = () => {
-    if (store.state.currentContextUrl === "") {
+    if (store.currentContextUrl === "") {
       store.setCurrentContextUrl("none");
       return;
     }
-    if (store.state.currentContextUrl === "none") {
+    if (store.currentContextUrl === "none") {
       return;
     }
-    if (store.state.currentContextUrl === "temp") {
+    if (store.currentContextUrl === "temp") {
       return;
     }
 
@@ -51,17 +50,14 @@ const MainPage = observer(() => {
     }
   
     const currentContext =
-    contexts.find((context) => context.url === store.state.currentContextUrl) ||
+    contexts.find((context) => context.url === store.currentContextUrl) ||
       {};
 
     return currentContext;
   };
   useEffect(() => {
     setCurrentContext(fetchContext());
-  }, [store.state.currentContextUrl]);
-
-  console.log(store.state.currentContextUrl);
-
+  }, [store.currentContextUrl]);
   const [currentContext, setCurrentContext] = useState(fetchContext());
 
   const [text, setText] = useState(
@@ -75,10 +71,10 @@ const MainPage = observer(() => {
       ? currentContext.sqlQuery
       : ""
   );
-  const [queryResult, setQueryResult] = useState(
+  const [output, setOutput] = useState(
     currentContext && currentContext.keys && currentContext.keys.length > 0
-      ? currentContext.queryResult
-      : {}
+      ? currentContext.output
+      : []
   );
   const [isHistoryOpen, setIsHistoryOpen] = useState(true);
   const [isChooseModalOpen, setIsChooseModalOpen] = useState(false);
@@ -160,7 +156,6 @@ const MainPage = observer(() => {
   const sendQueryTestDatabase = async (sqlQuery) => {
     try {
       store.setIsLoading(true);
-      console.log("JA KURWA PIERDOLE");
       const res = await fetch("http://192.168.203.105:8000/execute", {
         method: "POST",
         timeout: 180000,
@@ -173,8 +168,7 @@ const MainPage = observer(() => {
         }),
       });
       const data = await res.json();
-      console.log(data.queryResult);
-      setQueryResult(data.queryResult);
+      setOutput(data.output);
     } catch (error) {
       console.log(error);
     } finally {
@@ -182,7 +176,7 @@ const MainPage = observer(() => {
     }
   };
 
-  const sendQueryAnyDatabase = async (sqlQuery) => {
+  const sendQueryTestAnyDatabase = async (sqlQuery) => {
     try {
       store.setIsLoading(true);
       const res = await fetch("http://192.168.203.105:8000/execute", {
@@ -197,7 +191,7 @@ const MainPage = observer(() => {
         }),
       });
       const data = await res.json();
-      setQueryResult(data.queryResult);
+      setOutput(data.output);
     } catch (error) {
       console.log(error);
     } finally {
@@ -278,49 +272,36 @@ const MainPage = observer(() => {
             position: "relative",
           }}
         >
-          {store.state.currentContextUrl !== "none" && (
-            <Box sx={{ width: "50%", height: "30%" }}>
-              <InputBox
-                text={text}
-                setText={setText}
-                onSend={
-                  store.state.currentMode === "source"
-                    ? sendSpeechAnyBase
-                    : sendSpeechTestBase
-                }
-              />
-            </Box>
-          )}
+          <Box sx={{ width: "50%", height: "40%" }}>
+            <InputBox
+              text={text}
+              setText={setText}
+              onSend={
+                store.state.currentMode === "source"
+                  ? sendSpeechAnyBase
+                  : sendSpeechTestBase
+              }
+            />
+          </Box>
           {sqlQuery && (
             <Box
               sx={{
                 width: "50%",
-                height: "30%",
+                height: "40%",
               }}
             >
               <SQLQueryBox
                 query={sqlQuery}
-                setQuery={setSqlQuery}
-                isEditable={Boolean(queryResult)}
+                setSqlQuery={setSqlQuery}
+                isEditable={Boolean(output)}
                 onSend={
                   store.state.currentMode === "source"
-                    ? sendQueryAnyDatabase
+                    ? sendQueryTestAnyDatabase
                     : sendQueryTestDatabase
                 }
               />
             </Box>
           )}
-        </Box>
-        <Box
-          sx={{
-            width: "50%",
-            height: "40%",
-          }}
-        >
-          {/* {queryResult && queryResult.keys && queryResult.keys.length > 0 && (
-            <TableComponent queryResult={queryResult} />
-          )} */}
-          <TableComponent queryResult={queryResult} />
         </Box>
       </Box>
       {store.state.currentContextUrl === "temp" && isChooseModalOpen && (
