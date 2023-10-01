@@ -273,9 +273,15 @@ const MainPage = observer(() => {
             position: "relative",
           }}
         >
-          <Box sx={{ width: "100%", height: "60%" }}>
+          <Box sx={{ width: "100%", height: "59%" }}>
             <HistoryComponent context={currentContext} />
-            <Divider sx={{ width: "100%", height: "1px", color: "black" }} />
+            <Divider
+              sx={{
+                width: "100%",
+                height: "1px",
+                color: "black",
+              }}
+            />
           </Box>
           <Box
             width="80%"
@@ -284,6 +290,7 @@ const MainPage = observer(() => {
               display: "flex",
               flexDirection: "column",
               gap: "1rem",
+              marginTop: "1rem",
             }}
           >
             <Box sx={{ width: "100%" }}>

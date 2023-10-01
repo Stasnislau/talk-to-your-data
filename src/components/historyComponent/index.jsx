@@ -5,7 +5,7 @@ const HistoryComponent = observer(({ context }) => {
     <Box sx={{ height: "100%", width: "100%", position: "relative" }}>
       <Box
         sx={{
-          position: "fixed",
+          position: "absolute",
           top: "0",
           left: "0",
           width: "100%",
