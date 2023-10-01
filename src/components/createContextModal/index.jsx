@@ -21,111 +21,104 @@ const createContextModal = observer(
       onClose: PropTypes.func.isRequired,
     };
 
-    const store = useContext(Context);
-    const mods = [
-      { value: "testDatabase", label: "Test JPK database" },
-      { value: "source", label: "Source" },
-    ];
+  const store = useContext(Context);
+  const mods = [
+    { value: "testDatabase", label: "Testowa baza danych JPK" },
+    { value: "source", label: "URI bazy danych" },
+  ];
 
     const [talkName, setTalkName] = useState("");
     const [chosenMod, setChosenMod] = useState();
     const [chosenSource, setChosenSource] = useState();
 
-    const [error, setError] = useState("");
-    const onSubmit = (data) => {
-      const { mode, talkName } = data;
-      if (mode !== "source" && mode !== "testDatabase") {
-        setError("Please choose mode");
-        return;
-      }
-      store.setCurrentContext(talkName);
-      onClose();
-    };
+  const [error, setError] = useState("");
+  const onSubmit = (data) => {
+    const { mode, talkName } = data;
+    if (mode !== "source" && mode !== "testDatabase") {
+      setError("Proszę wybrać typ źródła");
+      return;
+    }
+    store.setCurrentContext(talkName);
+    onClose();
+  };
 
-    const handleSubmit = (event) => {
-      setError("");
-      event.preventDefault();
-      if (chosenMod !== "source" && chosenMod !== "testDatabase") {
-        setError("Please choose mode");
-        return;
-      }
-      const newContext = {
-        mode: chosenMod,
-        source: chosenSource,
-        talkName,
-        history: [],
-      };
-      onSubmit(newContext);
-      setContexts([...contexts, newContext]);
-    };
+  const handleSubmit = (event) => {
+    setError("");
+    event.preventDefault();
+    if (chosenMod !== "source" && chosenMod !== "testDatabase") {
+      setError("Proszę wybrać typ źródła");
+      return;
+    }
+    const newContext = { mode: chosenMod, source: chosenSource, talkName };
+    onSubmit(newContext)
+    setContexts([...contexts, newContext]);
+  };
 
-    return (
-      <Dialog open={open} onClose={onClose}>
-        <DialogTitle>Create context</DialogTitle>
-        <DialogContent
-          sx={{
-            minWidth: "550px",
-            minHeight: "200px",
-          }}
-        >
-          <form>
-            <Box
+  return (
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle>Nowa rozmowa</DialogTitle>
+      <DialogContent
+        sx={{
+          minWidth: "550px",
+          minHeight: "200px",
+        }}
+      >
+        <form>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <TextField
+              label="Nazwa rozmowy"
               sx={{
-                display: "flex",
-                flexDirection: "column",
+                marginTop: "1rem",
+              }}
+              value={talkName}
+              onChange={(e) => {
+                setTalkName(e.target.value)
+              }}
+            />
+            <TextField
+              label="Źródło"
+              select
+              sx={{
+                marginTop: "1rem",
+              }}
+              value={chosenMod}
+              onChange={(e) => {
+                setChosenMod(e.target.value);
               }}
             >
-              <TextField
-                label="Talk name"
-                sx={{
-                  marginTop: "1rem",
-                }}
-                value={talkName}
-                onChange={(e) => {
-                  setTalkName(e.target.value);
-                }}
-              />
-              <TextField
-                label="Choose mode"
-                select
-                sx={{
-                  marginTop: "1rem",
-                }}
-                value={chosenMod}
-                onChange={(e) => {
-                  setChosenMod(e.target.value);
-                }}
-              >
-                {mods.map((mod) => (
-                  <MenuItem key={mod.value} value={mod.value}>
-                    {mod.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-              {chosenMod === "source" && (
-                <DataSourceList
-                  selected={chosenSource}
-                  onChange={setChosenSource}
-                />
-              )}
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                sx={{
-                  marginTop: "3rem",
-                }}
-                onClick={handleSubmit}
-              >
-                Submit
-              </Button>
-            </Box>
-          </form>
-          <Typography color="error">{error}</Typography>
-        </DialogContent>
-      </Dialog>
-    );
-  }
-);
+              {mods.map((mod) => (
+                <MenuItem key={mod.value} value={mod.value}>
+                  {mod.label}
+                </MenuItem>
+              ))}
+            </TextField>
+            {
+              chosenMod === "source" && (
+                <DataSourceList selected={chosenSource} onChange={setChosenSource} />
+              )
+            }
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              sx={{
+                marginTop: "3rem",
+              }}
+              onClick={handleSubmit}
+            >
+              Stwórz
+            </Button>
+          </Box>
+        </form>
+        <Typography color="error">{error}</Typography>
+      </DialogContent>
+    </Dialog>
+  );
+});
 
 export default createContextModal;

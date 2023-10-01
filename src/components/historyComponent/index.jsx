@@ -83,17 +83,7 @@ const HistoryComponent = observer(({ context }) => {
             ))}
           </Box>
         ) : (
-          <Box
-            sx={{
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Typography> No history</Typography>
-          </Box>
+          <Typography> Historia jest pusta </Typography>
         )}
       </Box>
       <Divider

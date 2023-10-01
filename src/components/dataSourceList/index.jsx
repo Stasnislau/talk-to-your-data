@@ -49,7 +49,7 @@ const DataSourceList = observer(({ selected, onChange }) => {
                 <MenuItem key={item.url} value={item.url}>
                   <Box sx={{ display: "flex", flexDirection: "column" }}>
                     <Typography fontSize="0.75rem">
-                      name: {item.name}
+                      Nazwa: {item.name}
                     </Typography>
                     <Typography fontSize="1rem">url: {item.url}</Typography>
                   </Box>

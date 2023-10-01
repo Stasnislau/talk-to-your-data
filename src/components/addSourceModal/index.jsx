@@ -29,7 +29,7 @@ const AddSourceModal = observer(({ open, onClose, list, setList }) => {
     const newSource = { name, url };
     list.forEach((source) => {
       if (source.url === url) {
-        setError("Source with this url already exists");
+        setError("Źródło o podanym adresie już istnieje");
         return;
       }
     });
@@ -42,7 +42,7 @@ const AddSourceModal = observer(({ open, onClose, list, setList }) => {
     setError("");
     event.preventDefault();
     if (url.trim() === "" || name.trim() === "") {
-      setError("Please fill all fields");
+      setError("Proszę wypełnić wszystkie pola");
       return;
     }
     onSubmit({ url, name });
@@ -59,7 +59,7 @@ const AddSourceModal = observer(({ open, onClose, list, setList }) => {
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Add Source</DialogTitle>
+      <DialogTitle>Dodaj źródło</DialogTitle>
       <DialogContent>
         <form onSubmit={handleSubmit}>
           <TextField
@@ -77,7 +77,7 @@ const AddSourceModal = observer(({ open, onClose, list, setList }) => {
             margin="normal"
           />
           <Button type="submit" variant="contained" color="primary">
-            Add
+            Dodaj
           </Button>
         </form>
         <Typography color="error">{error}</Typography>

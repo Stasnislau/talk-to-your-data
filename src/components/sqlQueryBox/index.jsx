@@ -29,6 +29,7 @@ const SQLQueryBox = observer(({ query, setQuery, isEditable, onSend }) => {
   return isEditable ? (
     <Box>
       <TextField
+        label="Zapytanie SQL"
         fullWidth
         maxRows={5}
         multiline
@@ -56,7 +57,7 @@ const SQLQueryBox = observer(({ query, setQuery, isEditable, onSend }) => {
   ) : (
     <Box>
       <TextField
-        label="SQL Query"
+        label="Zapytanie SQL"
         multiline
         rows={4}
         value={query}

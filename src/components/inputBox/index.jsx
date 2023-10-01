@@ -106,7 +106,7 @@ const InputBox = observer(({ onSend, text, setText }) => {
         fullWidth
         maxRows={5}
         multiline
-        placeholder="Your message"
+        placeholder="Wpisz wiadomość"
         value={text}
         onChange={(event) => setText(event.target.value)}
         onKeyDown={handleKeyDown}
