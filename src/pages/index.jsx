@@ -11,7 +11,6 @@ import ContextList from "../components/ContextList";
 import GettingStarted from "../components/gettingStarted";
 import CreateContextModal from "../components/createContextModal";
 import SQLQueryBox from "../components/sqlQueryBox";
-import TableComponent from "../components/tableComponent";
 import useStateLS from "../hooks/useStateLS";
 
 const Container = styled(Box)`
@@ -73,8 +72,8 @@ const MainPage = observer(() => {
   );
   const [queryResult, setQueryResult] = useState(
     currentContext && currentContext.keys && currentContext.keys.length > 0
-      ? currentContext.queryResult
-      : {}
+      ? currentContext.output
+      : []
   );
   const [isHistoryOpen, setIsHistoryOpen] = useState(true);
   const [isChooseModalOpen, setIsChooseModalOpen] = useState(false);
@@ -175,7 +174,7 @@ const MainPage = observer(() => {
     }
   };
 
-  const sendQueryAnyDatabase = async (sqlQuery) => {
+  const sendQueryTestAnyDatabase = async (sqlQuery) => {
     try {
       store.setIsLoading(true);
       const res = await fetch("http://192.168.203.105:8000/execute", {
@@ -190,7 +189,7 @@ const MainPage = observer(() => {
         }),
       });
       const data = await res.json();
-      setQueryResult(data.queryResult);
+      setQueryResult(data.output);
     } catch (error) {
       console.log(error);
     } finally {
@@ -289,32 +288,21 @@ const MainPage = observer(() => {
             <Box
               sx={{
                 width: "50%",
-                height: "30%",
+                height: "40%",
               }}
             >
               <SQLQueryBox
                 query={sqlQuery}
-                setQuery={setSqlQuery}
+                setSqlQuery={setSqlQuery}
                 isEditable={Boolean(queryResult)}
                 onSend={
                   currentContext.mode === "source"
-                    ? sendQueryAnyDatabase
+                    ? sendQueryTestAnyDatabase
                     : sendQueryTestDatabase
                 }
               />
             </Box>
           )}
-        </Box>
-        <Box
-          sx={{
-            width: "50%",
-            height: "40%",
-          }}
-        >
-          {/* {queryResult && queryResult.keys && queryResult.keys.length > 0 && (
-            <TableComponent queryResult={queryResult} />
-          )} */}
-          <TableComponent queryResult={queryResult} />
         </Box>
       </Box>
       {store.state.currentContext === "temp" && isChooseModalOpen && (
