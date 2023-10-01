@@ -26,18 +26,18 @@ const ContextList = observer(({ contexts }) => {
               borderRadius: "0.3rem",
               cursor: "pointer",
               backgroundColor:
-                store.state.currentContextUrl === context.talkName
+                store.state.currentContext === context.talkName
                   ? "#ffffff"
                   : "rgba(255,255,255,0.3)",
               "&:hover": {
-                backgroundColor: store.state.currentContextUrl === context.talkName
+                backgroundColor: store.state.currentContext === context.talkName
                   ? "#ffffff"
                   : "rgba(255,255,255,0.5)",
               },
               transition: "background-color 0.2s ease-in-out",
             }}
             onClick={() => {
-              store.setCurrentContextUrl(context.talkName);
+              store.setCurrentContext(context.talkName);
             }}
           >
                 <Typography

@@ -35,14 +35,14 @@ const MainPage = observer(() => {
   const store = useContext(Context);
   const [contexts, setContexts] = useStateLS("contexts", []);
   const fetchContext = () => {
-    if (store.state.currentContextUrl === "") {
-      store.setCurrentContextUrl("none");
+    if (store.state.currentContext === "") {
+      store.setCurrentContext("none");
       return;
     }
-    if (store.state.currentContextUrl === "none") {
+    if (store.state.currentContext === "none") {
       return;
     }
-    if (store.state.currentContextUrl === "temp") {
+    if (store.state.currentContext === "temp") {
       return;
     }
 
@@ -50,17 +50,13 @@ const MainPage = observer(() => {
       return {};
     }
   
-    const currentContext =
-    contexts.find((context) => context.url === store.state.currentContextUrl) ||
-      {};
+    const currCtx = contexts.find((context) => context.talkName === store.state.currentContext) || {};
 
-    return currentContext;
+    return currCtx;
   };
   useEffect(() => {
     setCurrentContext(fetchContext());
-  }, [store.state.currentContextUrl]);
-
-  console.log(store.state.currentContextUrl);
+  }, [store.state.currentContext]);
 
   const [currentContext, setCurrentContext] = useState(fetchContext());
 
@@ -118,7 +114,6 @@ const MainPage = observer(() => {
         { ddl, nlPrompt: text },
         "response"
       );
-      console.log(sqlQuery);
       setSqlQuery(sqlQuery);
     } catch (error) {
       console.log(error);
@@ -160,7 +155,6 @@ const MainPage = observer(() => {
   const sendQueryTestDatabase = async (sqlQuery) => {
     try {
       store.setIsLoading(true);
-      console.log("JA KURWA PIERDOLE");
       const res = await fetch("http://192.168.203.105:8000/execute", {
         method: "POST",
         timeout: 180000,
@@ -173,7 +167,6 @@ const MainPage = observer(() => {
         }),
       });
       const data = await res.json();
-      console.log(data.queryResult);
       setQueryResult(data.queryResult);
     } catch (error) {
       console.log(error);
@@ -204,6 +197,7 @@ const MainPage = observer(() => {
       store.setIsLoading(false);
     }
   };
+
   return (
     <Container>
       <SideBar className={isHistoryOpen ? "is-open" : ""}>
@@ -236,7 +230,7 @@ const MainPage = observer(() => {
                 flex: 1,
               }}
               onClick={() => {
-                store.setCurrentContextUrl("temp");
+                store.setCurrentContext("temp");
                 setIsChooseModalOpen(true);
               }}
             >
@@ -266,7 +260,7 @@ const MainPage = observer(() => {
           flexDirection: "column",
         }}
       >
-        {store.state.currentContextUrl === "none" ? <GettingStarted /> : null}
+        {store.state.currentContext === "none" ? <GettingStarted /> : null}
         <Box
           sx={{
             width: "100%",
@@ -278,20 +272,20 @@ const MainPage = observer(() => {
             position: "relative",
           }}
         >
-          {store.state.currentContextUrl !== "none" && (
+          {store.state.currentContext !== "none" && currentContext && (
             <Box sx={{ width: "50%", height: "30%" }}>
               <InputBox
                 text={text}
                 setText={setText}
                 onSend={
-                  store.state.currentMode === "source"
+                  currentContext.mode === "source"
                     ? sendSpeechAnyBase
                     : sendSpeechTestBase
                 }
               />
             </Box>
           )}
-          {sqlQuery && (
+          {currentContext && sqlQuery && (
             <Box
               sx={{
                 width: "50%",
@@ -303,7 +297,7 @@ const MainPage = observer(() => {
                 setQuery={setSqlQuery}
                 isEditable={Boolean(queryResult)}
                 onSend={
-                  store.state.currentMode === "source"
+                  currentContext.mode === "source"
                     ? sendQueryAnyDatabase
                     : sendQueryTestDatabase
                 }
@@ -323,7 +317,7 @@ const MainPage = observer(() => {
           <TableComponent queryResult={queryResult} />
         </Box>
       </Box>
-      {store.state.currentContextUrl === "temp" && isChooseModalOpen && (
+      {store.state.currentContext === "temp" && isChooseModalOpen && (
         <CreateContextModal
           contexts={contexts}
           setContexts={setContexts}

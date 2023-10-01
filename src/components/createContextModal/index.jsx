@@ -37,7 +37,7 @@ const createContextModal = observer(({ open, onClose, contexts, setContexts }) =
       setError("Please choose mode");
       return;
     }
-    store.setCurrentContextUrl(talkName);
+    store.setCurrentContext(talkName);
     onClose();
   };
 

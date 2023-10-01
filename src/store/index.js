@@ -4,9 +4,8 @@ export default class Store {
   constructor() {
     this.state = {
       isLoading: false,
-      currentContextUrl: "",
-      chosenDataUrl: "",
-      currentMode: "none", // "none", "source", "testDatabase"
+      currentContext: "",
+      currentMode: "none",
       shouldUpdateSourceList: false,
       shouldUpdateContextList: false,
     };
@@ -17,8 +16,8 @@ export default class Store {
     this.state.isLoading = value;
   }
 
-  setCurrentContextUrl(value) {
-    this.state.currentContextUrl = value;
+  setCurrentContext(value) {
+    this.state.currentContext = value;
   }
 
   setChosenDataUrl(value) {
