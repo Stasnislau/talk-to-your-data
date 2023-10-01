@@ -37,11 +37,9 @@ const HistoryComponent = observer(({ context }) => {
       </Box>
       <Box
         sx={{
-          position: "absolute",
-          top: "20%",
-          left: "0",
           width: "100%",
           height: "80%",
+          overflowY: "auto",
           display: "flex",
           justifyContent: "center",
         }}
@@ -51,11 +49,11 @@ const HistoryComponent = observer(({ context }) => {
             sx={{
               width: "100%",
               height: "100%",
-              overflowY: "scroll",
               display: "flex",
               flexDirection: "column",
-              justifyContent: "flex-start",
               alignItems: "center",
+              boxSizing: "border-box",
+              padding: "10px",
             }}
           >
             {context.history.map((item, index) => (
@@ -63,17 +61,24 @@ const HistoryComponent = observer(({ context }) => {
                 key={index}
                 sx={{
                   width: "100%",
-                  height: "100px",
                   display: "flex",
                   flexDirection: "column",
                   borderBottom: "1px solid black",
-                  overflowY: "auto",
                 }}
               >
-                <Typography> {item.text}</Typography>
-                <Typography> {item.query}</Typography>
-
-                <TableComponent queryResult={item.queryResult} />
+                <Box sx={{ display: "flex", flexDirection: "column" }}>
+                  <Box sx={{ display: "flex", flexDirection: "row" }}>
+                    <Typography>Input:&nbsp;</Typography>
+                    <Typography> {item.text}</Typography>
+                  </Box>
+                  <Box sx={{ display: "flex", flexDirection: "row" }}>
+                    <Typography>SQL query:&nbsp;</Typography>
+                    <Typography>{item.sqlQuery}</Typography>
+                  </Box>
+                </Box>
+                <Box sx={{ flexGrow: 1 }}>
+                  <TableComponent queryResult={item.queryResult} />
+                </Box>
               </Box>
             ))}
           </Box>

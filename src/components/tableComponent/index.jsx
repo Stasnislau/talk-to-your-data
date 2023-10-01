@@ -20,12 +20,11 @@ const TableComponent = observer(({ queryResult }) => {
   };
   const store = useContext(Context);
   const { data, headers } = queryResult;
-  console.log(data, headers);
 
   return (
     <TableContainer component={Paper}>
       {data && data.length > 0 && (
-        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+        <Table size="small" aria-label="a dense table">
           <TableHead>
             <TableRow>
               {headers &&
