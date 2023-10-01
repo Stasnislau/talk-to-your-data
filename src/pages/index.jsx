@@ -191,7 +191,7 @@ const MainPage = observer(() => {
         }),
       });
       const data = await res.json();
-      setQueryResult(data.output);
+      setQueryResult(data.queryResult);
     } catch (error) {
       console.log(error);
     } finally {
@@ -287,50 +287,55 @@ const MainPage = observer(() => {
             }}
           >
             <Box sx={{ width: "100%" }}>
-              <InputBox
-                text={text}
-                setText={setText}
-                onSend={
-                  currentContext.mode === "source"
-                    ? sendSpeechAnyBase
-                    : sendSpeechTestBase
-                }
-              />
+              <Box
+                width="80%"
+                height="40%"
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "1rem",
+                }}
+              >
+                <Box sx={{ width: "100%" }}>
+                  <InputBox
+                    text={text}
+                    setText={setText}
+                    onSend={
+                      store.state.currentMode === "source"
+                        ? sendSpeechAnyBase
+                        : sendSpeechTestBase
+                    }
+                  />
+                </Box>
+                <Box sx={{ width: "100%" }}>
+                  <Box sx={{ width: "100%" }}>
+                    <SQLQueryBox
+                      query={sqlQuery}
+                      setSqlQuery={setSqlQuery}
+                      isEditable={Boolean(queryResult)}
+                      onSend={
+                        store.state.currentMode === "source"
+                          ? sendQueryTestAnyDatabase
+                          : sendQueryTestDatabase
+                      }
+                    />
+                  </Box>
+                </Box>
+              </Box>
             </Box>
-          </Box>
-          {currentContext && sqlQuery && (
             <Box
               sx={{
                 width: "50%",
                 height: "40%",
               }}
             >
-            <Box sx={{ width: "100%" }}>
-              <SQLQueryBox
-                query={sqlQuery}
-                setSqlQuery={setSqlQuery}
-                isEditable={Boolean(queryResult)}
-                onSend={
-                  currentContext.mode === "source"
-                    ? sendQueryTestAnyDatabase
-                    : sendQueryTestDatabase
-                }
-              />
-            </Box>
-          </Box>
-          )}
-        <Box
-          sx={{
-            width: "50%",
-            height: "40%",
-          }}
-        >
-          {/* {queryResult && queryResult.keys && queryResult.keys.length > 0 && (
+              {/* {queryResult && queryResult.keys && queryResult.keys.length > 0 && (
             <TableComponent queryResult={queryResult} />
           )} */}
-          <TableComponent queryResult={queryResult} />
+              <TableComponent queryResult={queryResult} />
+            </Box>
+          </Box>
         </Box>
-      </Box>
       </Box>
       {store.state.currentContext === "temp" && isChooseModalOpen && (
         <CreateContextModal
