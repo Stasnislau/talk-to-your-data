@@ -11,6 +11,7 @@ import useMicFrequency from "../../hooks";
 import { Mic, Send } from "@mui/icons-material";
 import LanguageDropdown from "../languageDropdown";
 import { observer } from "mobx-react-lite";
+import { FormControl } from "@mui/material";
 
 const InputBox = observer(({ onSend, text, setText }) => {
   const store = useContext(Context);
@@ -79,19 +80,21 @@ const InputBox = observer(({ onSend, text, setText }) => {
     }
   }, [isRecording]);
   const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && text.trim() !== "") {
       handleSend();
     }
   };
 
   return (
-    <Box
+    <FormControl
+      fullWidth
       sx={{
-        position: "relative",
-        display: "flex",
-        flexDirection: "column",
-        width: "100%",
-        boxSizing: "border-box",
+        "&.MuiFormControl-root": {
+          display: "flex",
+          flexDirection: "row",
+          gap: "1rem",
+          fullWidth: true,
+        },
       }}
     >
       <LanguageDropdown
@@ -101,12 +104,10 @@ const InputBox = observer(({ onSend, text, setText }) => {
       />
       <TextField
         fullWidth
-        maxRows={8}
+        maxRows={5}
         multiline
+        placeholder="Your message"
         value={text}
-        sx={{
-          "& .MuiInputBase-root": {},
-        }}
         onChange={(event) => setText(event.target.value)}
         onKeyDown={handleKeyDown}
         InputProps={{
@@ -141,7 +142,7 @@ const InputBox = observer(({ onSend, text, setText }) => {
           ),
         }}
       />
-    </Box>
+    </FormControl>
   );
 });
 
