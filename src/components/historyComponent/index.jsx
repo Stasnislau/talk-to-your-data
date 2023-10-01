@@ -2,6 +2,8 @@ import { Box, Typography } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import { useContext } from "react";
 import { Context } from "../../App";
+import TableComponent from "../tableComponent";
+import { Divider } from "@mui/material";
 const HistoryComponent = observer(({ context }) => {
   const store = useContext(Context);
   return (
@@ -12,15 +14,25 @@ const HistoryComponent = observer(({ context }) => {
           height: "20%",
           display: "flex",
           justifyContent: "center",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
+        {context && context.mode === "source" ? (
+          <Typography>
+            {" "}
+            URL: {context && context.source
+              ? context.source
+              : "Choose one"}{" "}
+          </Typography>
+        ) : (
+          <Typography> Test Database</Typography>
+        )}
         <Typography>
           {" "}
-          URL: {context && context.url ? context.url : "Choose one"}{" "}
-        </Typography>
-        <Typography>
-          {" "}
-          Name: {context && context.name ? context.name : "Create one"}{" "}
+          Name: {context && context.talkName
+            ? context.talkName
+            : "Create one"}{" "}
         </Typography>
       </Box>
       <Box
@@ -53,19 +65,39 @@ const HistoryComponent = observer(({ context }) => {
                   width: "100%",
                   height: "100px",
                   display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
+                  flexDirection: "column",
                   borderBottom: "1px solid black",
+                  overflowY: "auto",
                 }}
               >
-                <Typography> {item} </Typography>
+                <Typography> {item.text}</Typography>
+                <Typography> {item.query}</Typography>
+
+                <TableComponent queryResult={item.queryResult} />
               </Box>
             ))}
           </Box>
         ) : (
-          <Typography> No history </Typography>
+          <Box
+            sx={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography> No history</Typography>
+          </Box>
         )}
       </Box>
+      <Divider
+        sx={{
+          width: "100%",
+          height: "1px",
+          color: "black",
+        }}
+      />
     </Box>
   );
 });

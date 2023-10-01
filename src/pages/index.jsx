@@ -95,7 +95,7 @@ const MainPage = observer(() => {
         },
         body: JSON.stringify({
           textQuery: text,
-          dbUrl: store.state.chosenDataUrl,
+          dbUrl: currentContext.source,
         }),
       });
       const data = await res.json();
@@ -177,7 +177,7 @@ const MainPage = observer(() => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          dbUrl: store.state.chosenDataUrl,
+          dbUrl: currentContext.source,
           sqlQuery: sqlQuery,
         }),
       });
@@ -190,6 +190,7 @@ const MainPage = observer(() => {
     }
   };
   useEffect(() => {
+    console.log("ZASHLO")
     if (queryResult && queryResult.keys && queryResult.keys.length > 0) {
       const newContexts = contexts.map((context) => {
         if (context.talkName === store.state.currentContext) {
@@ -204,6 +205,7 @@ const MainPage = observer(() => {
         return context;
       });
       setContexts(newContexts);
+      console.log(contexts);
     }
   }, [queryResult]);
   useEffect(() => {
@@ -286,20 +288,22 @@ const MainPage = observer(() => {
             position: "relative",
           }}
         >
-          <Box sx={{ width: "100%", height: "59%" }}>
-            {/* <HistoryComponent context={currentContext} /> */}
-            <Divider
-              sx={{
-                width: "100%",
-                height: "1px",
-                color: "black",
-              }}
-            />
-          </Box>
           {store.state.currentContext !== "none" ? (
+            <Box sx={{ width: "100%", height: "79%" }}>
+              <HistoryComponent context={currentContext} />
+              <Divider
+                sx={{
+                  width: "100%",
+                  height: "1px",
+                  color: "black",
+                }}
+              />
+            </Box>
+          ) : null}
+          {store.state.currentContext !== "none" && currentContext ? (
             <Box
               width="80%"
-              height="40%"
+              height="20%"
               sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -322,7 +326,7 @@ const MainPage = observer(() => {
                       text={text}
                       setText={setText}
                       onSend={
-                        store.state.currentMode === "source"
+                        currentContext.mode === "source"
                           ? sendSpeechAnyBase
                           : sendSpeechTestBase
                       }
@@ -332,10 +336,10 @@ const MainPage = observer(() => {
                     <Box sx={{ width: "100%" }}>
                       <SQLQueryBox
                         query={sqlQuery}
-                        setSqlQuery={setSqlQuery}
+                        setQuery={setSqlQuery}
                         isEditable={Boolean(queryResult)}
                         onSend={
-                          store.state.currentMode === "source"
+                          currentContext.mode === "source"
                             ? sendQueryTestAnyDatabase
                             : sendQueryTestDatabase
                         }
@@ -343,17 +347,6 @@ const MainPage = observer(() => {
                     </Box>
                   </Box>
                 </Box>
-              </Box>
-              <Box
-                sx={{
-                  width: "50%",
-                  height: "40%",
-                }}
-              >
-                {/* {queryResult && queryResult.keys && queryResult.keys.length > 0 && (
-            <TableComponent queryResult={queryResult} />
-          )} */}
-                <TableComponent queryResult={queryResult} />
               </Box>
             </Box>
           ) : null}
