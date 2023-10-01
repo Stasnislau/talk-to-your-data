@@ -190,6 +190,7 @@ const MainPage = observer(() => {
     }
   };
   useEffect(() => {
+    console.log("ZASHLO")
     if (queryResult && queryResult.keys && queryResult.keys.length > 0) {
       const newContexts = contexts.map((context) => {
         if (context.talkName === store.state.currentContext) {
@@ -204,6 +205,7 @@ const MainPage = observer(() => {
         return context;
       });
       setContexts(newContexts);
+      console.log(contexts);
     }
   }, [queryResult]);
   useEffect(() => {
