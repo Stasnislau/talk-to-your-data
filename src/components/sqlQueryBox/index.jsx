@@ -30,7 +30,7 @@ const SQLQueryBox = observer(({ query, setQuery, isEditable, onSend }) => {
     <Box>
       <TextField
         fullWidth
-        maxRows={8}
+        maxRows={5}
         multiline
         value={query}
         sx={{
