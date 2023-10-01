@@ -13,7 +13,6 @@ import CreateContextModal from "../components/createContextModal";
 import SQLQueryBox from "../components/sqlQueryBox";
 import useStateLS from "../hooks/useStateLS";
 import HistoryComponent from "../components/historyComponent";
-import TableComponent from "../components/tableComponent";
 
 const Container = styled(Box)`
   display: flex;
@@ -35,6 +34,7 @@ const SideBar = styled(Box)`
 const MainPage = observer(() => {
   const store = useContext(Context);
   const [contexts, setContexts] = useStateLS("contexts", []);
+  const [shouldUpdateContexts, setShouldUpdateContexts] = useState(false);
   const fetchContext = () => {
     if (store.state.currentContext === "") {
       store.setCurrentContext("none");
@@ -190,8 +190,7 @@ const MainPage = observer(() => {
     }
   };
   useEffect(() => {
-    console.log("ZASHLO")
-    if (queryResult && queryResult.keys && queryResult.keys.length > 0) {
+    if (queryResult && queryResult.headers && queryResult.headers.length > 0) {
       const newContexts = contexts.map((context) => {
         if (context.talkName === store.state.currentContext) {
           return {
@@ -205,7 +204,10 @@ const MainPage = observer(() => {
         return context;
       });
       setContexts(newContexts);
-      console.log(contexts);
+      setText("");
+      setSqlQuery("");
+      setQueryResult({});
+      setShouldUpdateContexts(true);
     }
   }, [queryResult]);
   useEffect(() => {
@@ -213,6 +215,13 @@ const MainPage = observer(() => {
     setSqlQuery("");
     setQueryResult({});
   }, [store.state.currentContext]);
+
+  useEffect(() => {
+    if (shouldUpdateContexts) {
+      setShouldUpdateContexts(false);
+      setCurrentContext(fetchContext());
+    }
+  }, [shouldUpdateContexts]);
 
   return (
     <Container>
