@@ -58,7 +58,7 @@ const createContextModal = observer(({ open, onClose, contexts, setContexts }) =
       <DialogTitle>Create context</DialogTitle>
       <DialogContent
         sx={{
-          minWidth: "200px",
+          minWidth: "550px",
           minHeight: "200px",
         }}
       >
