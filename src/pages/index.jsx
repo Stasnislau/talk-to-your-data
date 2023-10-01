@@ -61,22 +61,10 @@ const MainPage = observer(() => {
 
   const [currentContext, setCurrentContext] = useState(fetchContext());
 
-  const [text, setText] = useState(
-    currentContext && currentContext.keys && currentContext.keys.length > 0
-      ? currentContext.text
-      : ""
-  );
+  const [text, setText] = useState("");
 
-  const [sqlQuery, setSqlQuery] = useState(
-    currentContext && currentContext.keys && currentContext.keys.length > 0
-      ? currentContext.sqlQuery
-      : ""
-  );
-  const [queryResult, setQueryResult] = useState(
-    currentContext && currentContext.keys && currentContext.keys.length > 0
-      ? currentContext.output
-      : []
-  );
+  const [sqlQuery, setSqlQuery] = useState("");
+  const [queryResult, setQueryResult] = useState({});
   const [isHistoryOpen, setIsHistoryOpen] = useState(true);
   const [isChooseModalOpen, setIsChooseModalOpen] = useState(false);
   const wsRequest = (serverUrl, requestSocket, requestData, responseSocket) => {
@@ -198,6 +186,28 @@ const MainPage = observer(() => {
       store.setIsLoading(false);
     }
   };
+  useEffect(() => {
+    if (queryResult && queryResult.keys && queryResult.keys.length > 0) {
+      const newContexts = contexts.map((context) => {
+        if (context.url === store.state.currentContextUrl) {
+          return {
+            ...context,
+            history: [
+              ...context.history,
+              { text, sqlQuery, queryResult: queryResult },
+            ],
+          };
+        }
+        return context;
+      });
+      setContexts(newContexts);
+    }
+  }, [queryResult]);
+  useEffect(() => {
+    setText("");
+    setSqlQuery("");
+    setQueryResult({});
+  }, [store.state.currentContextUrl]);
 
   return (
     <Container>
@@ -274,7 +284,7 @@ const MainPage = observer(() => {
           }}
         >
           <Box sx={{ width: "100%", height: "59%" }}>
-            <HistoryComponent context={currentContext} />
+            {/* <HistoryComponent context={currentContext} /> */}
             <Divider
               sx={{
                 width: "100%",
