@@ -35,14 +35,14 @@ const MainPage = observer(() => {
   const store = useContext(Context);
   const [contexts, setContexts] = useStateLS("contexts", []);
   const fetchContext = () => {
-    if (store.currentContextUrl === "") {
+    if (store.state.currentContextUrl === "") {
       store.setCurrentContextUrl("none");
       return;
     }
-    if (store.currentContextUrl === "none") {
+    if (store.state.currentContextUrl === "none") {
       return;
     }
-    if (store.currentContextUrl === "temp") {
+    if (store.state.currentContextUrl === "temp") {
       return;
     }
 
@@ -51,14 +51,17 @@ const MainPage = observer(() => {
     }
   
     const currentContext =
-    contexts.find((context) => context.url === store.currentContextUrl) ||
+    contexts.find((context) => context.url === store.state.currentContextUrl) ||
       {};
 
     return currentContext;
   };
   useEffect(() => {
     setCurrentContext(fetchContext());
-  }, [store.currentContextUrl]);
+  }, [store.state.currentContextUrl]);
+
+  console.log(store.state.currentContextUrl);
+
   const [currentContext, setCurrentContext] = useState(fetchContext());
 
   const [text, setText] = useState(
@@ -275,7 +278,7 @@ const MainPage = observer(() => {
             position: "relative",
           }}
         >
-          {store.state.currentMode !== "none" && (
+          {store.state.currentContextUrl !== "none" && (
             <Box sx={{ width: "50%", height: "30%" }}>
               <InputBox
                 text={text}
