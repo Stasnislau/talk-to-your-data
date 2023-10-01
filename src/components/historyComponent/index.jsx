@@ -3,42 +3,51 @@ import { observer } from "mobx-react-lite";
 import { useContext } from "react";
 import { Context } from "../../App";
 import TableComponent from "../tableComponent";
-import { Divider } from "@mui/material";
 const HistoryComponent = observer(({ context }) => {
   const store = useContext(Context);
   return (
-    <Box sx={{ height: "100%", width: "100%", position: "relative" }}>
+    <Box sx={{ height: "75vh", width: "100%", position: "relative", display: "flex", flexDirection: "column" }}>
       <Box
         sx={{
           width: "100%",
-          height: "20%",
           display: "flex",
           justifyContent: "center",
           flexDirection: "column",
-          alignItems: "center",
+          padding: '1rem'
         }}
       >
+        <Typography
+          sx={{
+            fontWeight: "bold",
+            fontSize: "1.5rem",
+            color: "#277fbd"
+          }}
+        >
+          {" "}
+          {context && context.talkName
+            ? context.talkName
+            : "Create one"}{" "}
+        </Typography>
         {context && context.mode === "source" ? (
-          <Typography>
+          <Typography
+            sx={{
+              fontSize: "0.8rem",
+              color: "#277ebdb5"
+            }}
+          >
             {" "}
-            URL: {context && context.source
+            URI: {context && context.source
               ? context.source
               : "Choose one"}{" "}
           </Typography>
         ) : (
           <Typography> Test Database</Typography>
         )}
-        <Typography>
-          {" "}
-          Name: {context && context.talkName
-            ? context.talkName
-            : "Create one"}{" "}
-        </Typography>
       </Box>
       <Box
         sx={{
           width: "100%",
-          height: "80%",
+          flexGrow: 1,
           overflowY: "auto",
           display: "flex",
           justifyContent: "center",
@@ -48,7 +57,6 @@ const HistoryComponent = observer(({ context }) => {
           <Box
             sx={{
               width: "100%",
-              height: "100%",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -63,20 +71,26 @@ const HistoryComponent = observer(({ context }) => {
                   width: "100%",
                   display: "flex",
                   flexDirection: "column",
-                  borderBottom: "1px solid black",
+                  padding: "1rem",
+                  backgroundColor: index % 2 === 0 ? "#277ebd14" : "#ffffff",
                 }}
               >
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
                   <Box sx={{ display: "flex", flexDirection: "row" }}>
-                    <Typography>Input:&nbsp;</Typography>
+                    <Typography>Zapytanie: &nbsp;</Typography>
                     <Typography> {item.text}</Typography>
                   </Box>
-                  <Box sx={{ display: "flex", flexDirection: "row" }}>
-                    <Typography>SQL query:&nbsp;</Typography>
-                    <Typography>{item.sqlQuery}</Typography>
+                  <Box sx={{ display: "flex", flexDirection: "row", marginTop: '0.5rem' }}>
+                    <Typography>Zapytanie SQL: &nbsp;</Typography>
+                    <Typography
+                      sx={{
+                        fontFamily: "monospace",
+                        color: "#742f16",
+                      }}
+                    >{item.sqlQuery}</Typography>
                   </Box>
                 </Box>
-                <Box sx={{ flexGrow: 1 }}>
+                <Box sx={{ flexGrow: 1, marginTop: '0.5rem' }}>
                   <TableComponent queryResult={item.queryResult} />
                 </Box>
               </Box>
@@ -86,13 +100,6 @@ const HistoryComponent = observer(({ context }) => {
           <Typography> Historia jest pusta </Typography>
         )}
       </Box>
-      <Divider
-        sx={{
-          width: "100%",
-          height: "1px",
-          color: "black",
-        }}
-      />
     </Box>
   );
 });

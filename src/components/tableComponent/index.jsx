@@ -29,7 +29,13 @@ const TableComponent = observer(({ queryResult }) => {
             <TableRow>
               {headers &&
                 headers.length > 0 &&
-                headers.map((header) => <TableCell key={header}>{header}</TableCell>)}
+                headers.map((header) => <TableCell key={header}
+                  sx={{
+                    fontWeight: "bold",
+                    fontSize: "1rem",
+                    color: "#0c283c",
+                  }}
+                >{header}</TableCell>)}
             </TableRow>
           </TableHead>
           <TableBody>

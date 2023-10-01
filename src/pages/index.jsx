@@ -289,7 +289,7 @@ const MainPage = observer(() => {
         <Box
           sx={{
             width: "100%",
-            height: "100%",
+            height: "100vh",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
@@ -298,7 +298,7 @@ const MainPage = observer(() => {
           }}
         >
           {store.state.currentContext !== "none" ? (
-            <Box sx={{ width: "100%", height: "79%" }}>
+            <Box sx={{ width: "100%", height: "78vh" }}>
               <HistoryComponent context={currentContext} />
               <Divider
                 sx={{
@@ -312,7 +312,7 @@ const MainPage = observer(() => {
           {store.state.currentContext !== "none" && currentContext ? (
             <Box
               width="80%"
-              height="20%"
+              height="20vh"
               sx={{
                 display: "flex",
                 flexDirection: "column",

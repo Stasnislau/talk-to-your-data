@@ -49,7 +49,7 @@ const createContextModal = observer(
       setError("Proszę wybrać typ źródła");
       return;
     }
-    const newContext = { mode: chosenMod, source: chosenSource, talkName };
+    const newContext = { mode: chosenMod, source: chosenSource, talkName, history: [] };
     onSubmit(newContext)
     setContexts([...contexts, newContext]);
   };

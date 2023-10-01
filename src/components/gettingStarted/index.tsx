@@ -11,11 +11,19 @@ const GettingStarted = () => {
         justifyContent: "center",
       }}
     >
-      <Typography variant="h4" component="h1" gutterBottom>
+      <Typography
+        variant="h4"
+        component="h1"
+        gutterBottom
+        sx={{
+          fontWeight: "bold",
+          color: "primary.main",
+        }}
+      >
         Witaj w "Talk to your data"
       </Typography>
       <Typography variant="h5" component="h2" gutterBottom>
-        Aplikacja do gadania z bazami danych
+        Aplikacja do rozmowy z bazami danych
       </Typography>
       <Typography variant="body1" gutterBottom>
         Żeby zacząć stwórz nową rozmowę

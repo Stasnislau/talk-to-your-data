@@ -104,7 +104,7 @@ const InputBox = observer(({ onSend, text, setText }) => {
       />
       <TextField
         fullWidth
-        maxRows={5}
+        maxRows={1}
         multiline
         placeholder="Wpisz wiadomość"
         value={text}
