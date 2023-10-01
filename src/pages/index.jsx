@@ -50,8 +50,11 @@ const MainPage = observer(() => {
     if (!contexts) {
       return {};
     }
-  
-    const currCtx = contexts.find((context) => context.talkName === store.state.currentContext) || {};
+
+    const currCtx =
+      contexts.find(
+        (context) => context.talkName === store.state.currentContext
+      ) || {};
 
     return currCtx;
   };
@@ -189,7 +192,7 @@ const MainPage = observer(() => {
   useEffect(() => {
     if (queryResult && queryResult.keys && queryResult.keys.length > 0) {
       const newContexts = contexts.map((context) => {
-        if (context.url === store.state.currentContextUrl) {
+        if (context.talkName === store.state.currentContext) {
           return {
             ...context,
             history: [
@@ -207,7 +210,7 @@ const MainPage = observer(() => {
     setText("");
     setSqlQuery("");
     setQueryResult({});
-  }, [store.state.currentContextUrl]);
+  }, [store.state.currentContext]);
 
   return (
     <Container>
@@ -293,65 +296,67 @@ const MainPage = observer(() => {
               }}
             />
           </Box>
-          <Box
-            width="80%"
-            height="40%"
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "1rem",
-              marginTop: "1rem",
-            }}
-          >
-            <Box sx={{ width: "100%" }}>
-              <Box
-                width="80%"
-                height="40%"
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1rem",
-                }}
-              >
-                <Box sx={{ width: "100%" }}>
-                  <InputBox
-                    text={text}
-                    setText={setText}
-                    onSend={
-                      store.state.currentMode === "source"
-                        ? sendSpeechAnyBase
-                        : sendSpeechTestBase
-                    }
-                  />
-                </Box>
-                <Box sx={{ width: "100%" }}>
+          {store.state.currentContext !== "none" ? (
+            <Box
+              width="80%"
+              height="40%"
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "1rem",
+                marginTop: "1rem",
+              }}
+            >
+              <Box sx={{ width: "100%" }}>
+                <Box
+                  width="80%"
+                  height="40%"
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "1rem",
+                  }}
+                >
                   <Box sx={{ width: "100%" }}>
-                    <SQLQueryBox
-                      query={sqlQuery}
-                      setSqlQuery={setSqlQuery}
-                      isEditable={Boolean(queryResult)}
+                    <InputBox
+                      text={text}
+                      setText={setText}
                       onSend={
                         store.state.currentMode === "source"
-                          ? sendQueryTestAnyDatabase
-                          : sendQueryTestDatabase
+                          ? sendSpeechAnyBase
+                          : sendSpeechTestBase
                       }
                     />
                   </Box>
+                  <Box sx={{ width: "100%" }}>
+                    <Box sx={{ width: "100%" }}>
+                      <SQLQueryBox
+                        query={sqlQuery}
+                        setSqlQuery={setSqlQuery}
+                        isEditable={Boolean(queryResult)}
+                        onSend={
+                          store.state.currentMode === "source"
+                            ? sendQueryTestAnyDatabase
+                            : sendQueryTestDatabase
+                        }
+                      />
+                    </Box>
+                  </Box>
                 </Box>
               </Box>
-            </Box>
-            <Box
-              sx={{
-                width: "50%",
-                height: "40%",
-              }}
-            >
-              {/* {queryResult && queryResult.keys && queryResult.keys.length > 0 && (
+              <Box
+                sx={{
+                  width: "50%",
+                  height: "40%",
+                }}
+              >
+                {/* {queryResult && queryResult.keys && queryResult.keys.length > 0 && (
             <TableComponent queryResult={queryResult} />
           )} */}
-              <TableComponent queryResult={queryResult} />
+                <TableComponent queryResult={queryResult} />
+              </Box>
             </Box>
-          </Box>
+          ) : null}
         </Box>
       </Box>
       {store.state.currentContext === "temp" && isChooseModalOpen && (
