@@ -34,6 +34,7 @@ const SideBar = styled(Box)`
 const MainPage = observer(() => {
   const store = useContext(Context);
   const [contexts, setContexts] = useStateLS("contexts", []);
+  const [shouldUpdateContexts, setShouldUpdateContexts] = useState(false);
   const fetchContext = () => {
     if (store.state.currentContext === "") {
       store.setCurrentContext("none");
@@ -206,6 +207,7 @@ const MainPage = observer(() => {
       setText("");
       setSqlQuery("");
       setQueryResult({});
+      setShouldUpdateContexts(true);
     }
   }, [queryResult]);
   useEffect(() => {
@@ -213,6 +215,13 @@ const MainPage = observer(() => {
     setSqlQuery("");
     setQueryResult({});
   }, [store.state.currentContext]);
+
+  useEffect(() => {
+    if (shouldUpdateContexts) {
+      setShouldUpdateContexts(false);
+      setCurrentContext(fetchContext());
+    }
+  }, [shouldUpdateContexts]);
 
   return (
     <Container>
